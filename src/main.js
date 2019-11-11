@@ -1,8 +1,11 @@
+import api from './api';
+
 class App {
   constructor() {
     this.repositories = [];
 
     this.formEl = document.getElementById('repo-form');
+    this.inputEl = document.querySelector('input[name=repository]');
     this.listEl = document.getElementById('repo-list');
 
     this.reisterHandlers();
@@ -14,8 +17,18 @@ class App {
     this.formEl.onsubmit = event => this.addRepository(event);
   }
 
-  addRepository(event) {
+  async addRepository(event) {
     event.preventDefault(); // anula comportamento padrão do form
+
+    const repoInput = this.inputEl.value;
+
+    if (repoInput.length === 0)
+      return;
+    
+    const response = await api.get(`/repos/${repoInput}`);
+    
+    console.log(response);
+
     // Colocando informações de forma estática, depois vai vir da api do git
     this.repositories.push({
       name: 'rocketseat.com.br',
